@@ -112,13 +112,13 @@ line_r : statement line_r {}
 	| var_decl line_r {}
 	| /*empty*/ {};
 
-statement : lval TOKEN_ASSIGNOP expr {};
-	| method_call {}
+statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {};
+	| method_call TOKEN_SEMICOLON {}
 	| if_block {}
 	| for_block {}
-	| TOKEN_RETURN expr {}
-	| TOKEN_BREAKSTMT {}
-	| TOKEN_CONTINUESTMT {}
+	| TOKEN_RETURN expr TOKEN_SEMICOLON {}
+	| TOKEN_BREAKSTMT TOKEN_SEMICOLON {}
+	| TOKEN_CONTINUESTMT TOKEN_SEMICOLON {}
 	| block {};
 
 methodtype : datatype {}
