@@ -64,15 +64,19 @@ void yyerror(const char *s);
 %type methodtype
 %type datatype
 %type lval
-%type expr_r
+%type arg_r
+%type arg
 %type expr
 %type prod
 %type atm
+%type ind
 %type method_call
 %type method_name
 %type id
 %type int_literal
-
+%type if_block
+%type if_block_r
+%type for_block
 
 %%
 
@@ -101,7 +105,64 @@ line_r : statement line_r {}
 	| var_decl line_r {}
 	| /*empty*/ {};
 
-statement : 
+statement : lval TOKEN_ASSIGNOP expr {};
+	| method_call {}
+	| if_block {}
+	| for_block {}
+	| TOKEN_RETURN expr {}
+	| TOKEN_BREAKSTMT {}
+	| TOKEN_CONTINUESTMT {}
+	| block {};
+
+methodtype : datatype {}
+	| VOIDTYPE {};
+
+datatype : TOKEN_INTTYPE {}
+	| TOKEN_STRINGTYPE {}
+	| TOKEN_CHARTYPE {};
+
+lval : TOKEN_ID {}
+	| TOKEN_ID TOKEN_LB expr TOKEN_RB {};
+
+arg_r : arg TOKEN_COMMA arg_r {}
+	| arg {};
+
+arg : expr {}
+	| TOKEN_STRINGCONST {};
+
+expr : prod TOKEN_ARITHMATICOP_1 expr {}
+	| prod {};
+
+prod : atm TOKEN_ARITHMATICOP_2 prod {}
+	| TOKEN_LOGICOP prod {}
+	| atm {};
+
+atm : TOKEN_ID ind {}
+	| TOKEN_CHARCONST {}
+	| int_literal {}
+	| TOKEN_LP expr TOKEN_RP {};
+
+ind : TOKEN_LB expr TOKEN_RB {};
+
+method_call : method_name TOKEN_LP expr_r TOKEN_RP {};
+| TOKEN_CALLOUT TOKEN_LP TOKEN_STRINGCONST TOKEN_COMMA arg_r TOKEN_RP {};
+
+method_name : id {};
+
+id : TOKEN_ID {}
+| TOKEN_MAINFUNC;
+
+int_literal : TOKEN_DECIMAL_CONST {}
+	| TOKEN_HEX {};
+
+if_block : TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block {}
+	| TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {};
+
+if_bloc_r : if_block {}
+	| block {};
+
+for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA expr TOKEN_RP block {};
+
 %%
 
 int main(int, char**) {
