@@ -1,15 +1,19 @@
 %{
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include "analyzer.tab.h"
-#define YY_NO_UNPUT
-long long int temp;
-long long int line = 1;
+	#include <iostream>
+	#include <string>
+	#include <string.h>
+	#include <cstdlib>
+	#include "analyzer.tab.h"
+	#define YY_NO_UNPUT
+	long long int temp;
+	long long int line = 1;
+
+	
 
 %}
 
 %option noyywrap
+
 
 %%
 \/\/.* { return TOKEN_COMMENT;}
@@ -23,7 +27,7 @@ long long int line = 1;
 		else if (*ptr >= 'A' && *ptr <= 'F') val += (*ptr) - 'A' + 10;
 		else val += (*ptr) - 'a' + 10;
 	}
-	yylval = val;
+	yylval.ival = val;
 	return TOKEN_HEX;
 }
 
@@ -78,7 +82,7 @@ long long int line = 1;
 [-]?([1-9][0-9]*|0) {
 	temp = atoll(yytext);
 	if (temp <= 2147483647 && temp >= -2147483648){
-		yylval = temp;
+		yylval.ival = temp;
 		return TOKEN_DECIMALCONST;
 	}
 	else {
@@ -86,39 +90,39 @@ long long int line = 1;
 	}
 }
 
-"+" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
+"+" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_1;}
 
-"-" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
+"-" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_1;}
 
-"/" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"/" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"*" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"*" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"%" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"%" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"&&" { yylval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
+"&&" { yylval.str = strdup(yytext); return TOKEN_CONDITIONOP;}
 
-"||" { yylval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
+"||" { yylval.str = strdup(yytext); return TOKEN_CONDITIONOP;}
 
-"=<" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"=<" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-"<" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"<" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-">" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+">" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-"=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"=" { yylval.str = strdup(yytext); return TOKEN_ASSIGNOP;}
 
-"+=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"+=" { yylval.str = strdup(yytext); return TOKEN_ASSIGNOP;}
 
-"-=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"-=" { yylval.str = strdup(yytext); return TOKEN_ASSIGNOP;}
 
-"!" { yylval.str = new std::string(yytext); return TOKEN_LOGICOP;}
+"!" { yylval.str = strdup(yytext); return TOKEN_LOGICOP;}
 
-"=>" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"=>" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-"==" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"==" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-"!=" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"!=" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
 "(" { return TOKEN_LP;}
 
@@ -141,7 +145,7 @@ long long int line = 1;
 
 \'([^\\\']|\\[abfnrtv\\\"\'])\' { return TOKEN_CHARCONST;}
 
-[A-Za-z_][A-Za-z0-9_]* { yylval.str = new std::string(yytext); return TOKEN_ID;}
+[A-Za-z_][A-Za-z0-9_]* { yylval.str = strdup(yytext); return TOKEN_ID;}
 
 [0-9!@$%^&]+[a-zA-Z|_|-]+   {
 	std::cout <<"[" << line << "]ERROR: Wrong id definition " << yytext << std::endl;

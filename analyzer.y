@@ -1,6 +1,8 @@
 %{
 #include <stdio.h> 
+#include <iostream>
 #include <math.h> 
+#include <string>
 
 
 extern int yylex();
@@ -10,6 +12,15 @@ void yyerror(const char *s);
 
 
 %}
+
+%union {
+	char * str;
+	int ival;
+	float fval;
+}
+
+
+
 
 // token definitions
 %token TOKEN_COMMENT
@@ -185,4 +196,8 @@ int main(int, char**) {
   }
   yyin = myfile;
   yyparse();
+}
+
+void yyerror(char const * message){
+	std::cout << message << std::endl;
 }
