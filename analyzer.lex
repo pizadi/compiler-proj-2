@@ -19,15 +19,7 @@
 \/\/.* { return TOKEN_COMMENT;}
 
 0x[0-9a-fA-F]{1,8} {
-	int val = 0;
-	char * ptr = yytext + 2;
-	while(*ptr != '\0'){
-		val = val*8;
-		if (*ptr >= '0' && *ptr <= '9') val += (*ptr) - '0';
-		else if (*ptr >= 'A' && *ptr <= 'F') val += (*ptr) - 'A' + 10;
-		else val += (*ptr) - 'a' + 10;
-	}
-	yylval.ival = val;
+	yylval.str = strdup(yytext);
 	return TOKEN_HEX;
 }
 
@@ -43,47 +35,46 @@
 
 [ ]* {}
 
-"boolean" { return TOKEN_BOOLEANTYPE;}
+"boolean" { yylval.str = strdup(yytext); return TOKEN_BOOLEANTYPE;}
 
-"void" { return TOKEN_VOIDTYPE;}
+"void" { yylval.str = strdup(yytext); return TOKEN_VOIDTYPE;}
 
-"break" { return TOKEN_BREAKSTMT;}
+"break" { yylval.str = strdup(yytext); return TOKEN_BREAKSTMT;}
 
-"callout" { return TOKEN_CALLOUT;}
+"callout" { yylval.str = strdup(yytext); return TOKEN_CALLOUT;}
 
-"class" { return TOKEN_CLASS;}
+"class" { yylval.str = strdup(yytext); return TOKEN_CLASS;}
 
-"continue" { return TOKEN_CONTINUESTMT;}                              
+"continue" { yylval.str = strdup(yytext); return TOKEN_CONTINUESTMT;}                              
 
-"int" { return TOKEN_INTTYPE;}
+"int" { yylval.str = strdup(yytext); return TOKEN_INTTYPE;}
 
-"string" { return TOKEN_STRINGTYPE;}
+"string" { yylval.str = strdup(yytext); return TOKEN_STRINGTYPE;}
 
-"char" { return TOKEN_CHARTYPE;}
+"char" { yylval.str = strdup(yytext); return TOKEN_CHARTYPE;}
 
-"main" { return TOKEN_MAINFUNC;}
+"main" { yylval.str = strdup(yytext); return TOKEN_MAINFUNC;}
 
-"for" { return TOKEN_LOOP;}
+"for" { yylval.str = strdup(yytext); return TOKEN_LOOP;}
 
-"return" { return TOKEN_RETURN;}
+"return" { yylval.str = strdup(yytext); return TOKEN_RETURN;}
 
-"if" { return TOKEN_IFCONDITION;}
+"if" { yylval.str = strdup(yytext); return TOKEN_IFCONDITION;}
 
-"else" { return TOKEN_ELSECONDITION;}
+"else" { yylval.str = strdup(yytext); return TOKEN_ELSECONDITION;}
 
-"true" { return TOKEN_BOOLEANCONST;}
+"true" { yylval.str = strdup(yytext); return TOKEN_BOOLEANCONST;}
 
-"false" { return TOKEN_BOOLEANCONST;}
+"false" { yylval.str = strdup(yytext); return TOKEN_BOOLEANCONST;}
 
-"Program" { return TOKEN_PROGRAMCLASS;}
+"Program" { yylval.str = strdup(yytext); return TOKEN_PROGRAMCLASS;}
 
 
 
 [-]?([1-9][0-9]*|0) {
 	temp = atoll(yytext);
 	if (temp <= 2147483647 && temp >= -2147483648){
-		yylval.ival = temp;
-		return TOKEN_DECIMALCONST;
+		yylval.str = strdup(yytext);
 	}
 	else {
 		std::cout << "[" << line << "]ERROR: Decimal constant " << yytext << " out of range." << std::endl;
@@ -124,26 +115,26 @@
 
 "!=" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
-"(" { return TOKEN_LP;}
+"(" { yylval.str = strdup(yytext); return TOKEN_LP;}
 
-")" { return TOKEN_RP;}
+")" { yylval.str = strdup(yytext); return TOKEN_RP;}
 
-"{" { return TOKEN_LCB;}
+"{" { yylval.str = strdup(yytext); return TOKEN_LCB;}
 
-"}" { return TOKEN_RCB;}
+"}" { yylval.str = strdup(yytext); return TOKEN_RCB;}
 					
 
-"[" { return TOKEN_LB;}
+"[" { yylval.str = strdup(yytext); return TOKEN_LB;}
 
-"]" { return TOKEN_RB;}
+"]" { yylval.str = strdup(yytext); return TOKEN_RB;}
 					
-";" { return TOKEN_SEMICOLON;}
+";" { yylval.str = strdup(yytext); return TOKEN_SEMICOLON;}
 
-"," { return TOKEN_COMMA;}
+"," { yylval.str = strdup(yytext); return TOKEN_COMMA;}
 
-\"([^\\\"\']|\\[\\\'\"abfnrtv])*\" { return TOKEN_STRINGCONST;}
+\"([^\\\"\']|\\[\\\'\"abfnrtv])*\" { yylval.str = strdup(yytext); return TOKEN_STRINGCONST;}
 
-\'([^\\\']|\\[abfnrtv\\\"\'])\' { return TOKEN_CHARCONST;}
+\'([^\\\']|\\[abfnrtv\\\"\'])\' { yylval.str = strdup(yytext); return TOKEN_CHARCONST;}
 
 [A-Za-z_][A-Za-z0-9_]* { yylval.str = strdup(yytext); return TOKEN_ID;}
 
