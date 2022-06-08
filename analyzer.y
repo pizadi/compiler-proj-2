@@ -86,7 +86,7 @@ void yyerror(const char *s);
 program : TOKEN_CLASS TOKEN_PROGRAMCLASS TOKEN_LCB decl_r TOKEN_RCB {};
 
 decl_r : method_decl decl_r {}
-	| method_decl decl_r {}
+	| field_decl decl_r {}
 	| /*empty*/ {};
 
 method_decl : methodtype id TOKEN_LP arg_decl_r TOKEN_RP block_r {};

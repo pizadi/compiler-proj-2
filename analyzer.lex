@@ -1,15 +1,18 @@
 %{
-  #include <iostream>
-  #include <string>
-  #include "analyzer.tab.h"
-  long long int temp;
-  long long int line = 1;
-  %option noyywrap
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "analyzer.tab.h"
+#define YY_NO_UNPUT
+long long int temp;
+long long int line = 1;
+
 %}
 
+%option noyywrap
 
 %%
-\/\/.* { return TOKEN_COMMENT}
+\/\/.* { return TOKEN_COMMENT;}
 
 0x[0-9a-fA-F]{1,8} {
 	int val = 0;
@@ -20,8 +23,9 @@
 		else if (*ptr >= 'A' && *ptr <= 'F') val += (*ptr) - 'A' + 10;
 		else val += (*ptr) - 'a' + 10;
 	}
-	yyval = val;
-	return TOKEN_HEX}
+	yylval = val;
+	return TOKEN_HEX;
+}
 
 0x0*[1-9A-Fa-f][0-9A-Fa-f]{9,} {
 	std::cout << "[" << line << "]ERROR: Hexadecimal constant " << yytext << " out of range." << std::endl;
@@ -53,8 +57,6 @@
 
 "char" { return TOKEN_CHARTYPE;}
 
-"void" { return TOKEN_VOIDTYPE;}
-
 "main" { return TOKEN_MAINFUNC;}
 
 "for" { return TOKEN_LOOP;}
@@ -76,7 +78,7 @@
 [-]?([1-9][0-9]*|0) {
 	temp = atoll(yytext);
 	if (temp <= 2147483647 && temp >= -2147483648){
-		yyval = temp;
+		yylval = temp;
 		return TOKEN_DECIMALCONST;
 	}
 	else {
@@ -84,39 +86,39 @@
 	}
 }
 
-"+" { yyval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
+"+" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
 
-"-" { yyval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
+"-" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_1;}
 
-"/" { yyval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"/" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"*" { yyval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"*" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"%" { yyval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
+"%" { yylval.str = new std::string(yytext); return TOKEN_ARITHMATICOP_2;}
 
-"&&" { yyval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
+"&&" { yylval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
 
-"||" { yyval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
+"||" { yylval.str = new std::string(yytext); return TOKEN_CONDITIONOP;}
 
-"=<" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"=<" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
-"<" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"<" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
-">" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+">" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
-"=" { yyval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
 
-"+=" { yyval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"+=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
 
-"-=" { yyval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
+"-=" { yylval.str = new std::string(yytext); return TOKEN_ASSIGNOP;}
 
-"!" { yyval.str = new std::string(yytext); return TOKEN_LOGICOP;}
+"!" { yylval.str = new std::string(yytext); return TOKEN_LOGICOP;}
 
-"=>" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"=>" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
-"==" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"==" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
-"!=" { yyval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
+"!=" { yylval.str = new std::string(yytext); return TOKEN_RELATIONOP;}
 
 "(" { return TOKEN_LP;}
 
@@ -139,14 +141,14 @@
 
 \'([^\\\']|\\[abfnrtv\\\"\'])\' { return TOKEN_CHARCONST;}
 
-[A-Za-z_][A-Za-z0-9_]* { yyval.str = new std::string(yytext); return TOKEN_ID;}
+[A-Za-z_][A-Za-z0-9_]* { yylval.str = new std::string(yytext); return TOKEN_ID;}
 
 [0-9!@$%^&]+[a-zA-Z|_|-]+   {
-	std::cout <<"[" << line << "]ERROR: Wrong id definition " << yytext << endl;
+	std::cout <<"[" << line << "]ERROR: Wrong id definition " << yytext << std::endl;
 }
 
 \'([^\\\']|\\[abfnrtv\\\"\']){2,}\' {
-	std::cout << "[" << line << "]ERROR: Invalid char constant " << yytext << endl;
+	std::cout << "[" << line << "]ERROR: Invalid char constant " << yytext << std::endl;
 }
 
 . { }
