@@ -1,7 +1,7 @@
 %{
   #include <iostream>
   #include <string>
-  #include "simple-expr.tab.h"
+  #include "analyzer.tab.h"
   long long int temp;
   long long int line = 1;
   %option noyywrap

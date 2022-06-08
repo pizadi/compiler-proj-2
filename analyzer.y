@@ -67,6 +67,7 @@ void yyerror(const char *s);
 %type datatype
 %type lval
 %type arg_r
+%type callout_arg_r
 %type arg
 %type expr
 %type prod
@@ -101,7 +102,7 @@ decl_r : var_decl TOKEN_COMMA decl_r {}
 	| var_decl {};
 
 var_decl : TOKEN_ID {}
-	| TOKEN_ID TOKEN_LB int_literal TOKEN_INT {};
+	| TOKEN_ID TOKEN_LB int_literal TOKEN_RB {};
 
 block_r : block block_r {}
 	| block {};
@@ -122,7 +123,7 @@ statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {};
 	| block {};
 
 methodtype : datatype {}
-	| VOIDTYPE {};
+	| TOKEN_VOIDTYPE {};
 
 datatype : TOKEN_INTTYPE {}
 	| TOKEN_STRINGTYPE {}
@@ -151,21 +152,24 @@ atm : TOKEN_ID ind {}
 
 ind : TOKEN_LB expr TOKEN_RB {};
 
-method_call : method_name TOKEN_LP expr_r TOKEN_RP {};
-| TOKEN_CALLOUT TOKEN_LP TOKEN_STRINGCONST TOKEN_COMMA arg_r TOKEN_RP {};
+method_call : method_name TOKEN_LP arg_r TOKEN_RP {};
+	| TOKEN_CALLOUT TOKEN_LP callout_arg_r TOKEN_RP {};
+
+callout_arg_r : TOKEN_STRINGCONST {}
+	| TOKEN_STRINGCONST TOKEN_COMMA arg_r {};
 
 method_name : id {};
 
 id : TOKEN_ID {}
 | TOKEN_MAINFUNC;
 
-int_literal : TOKEN_DECIMAL_CONST {}
+int_literal : TOKEN_DECIMALCONST {}
 	| TOKEN_HEX {};
 
 if_block : TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block {}
 	| TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {};
 
-if_bloc_r : if_block {}
+if_block_r : if_block {}
 	| block {};
 
 for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA expr TOKEN_RP block {};
@@ -173,7 +177,6 @@ for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA expr TOKEN_RP block {};
 %%
 
 int main(int, char**) {
-	for (int i = 0; i < 26; i++) alloc[i] = 0;
 	
   FILE *myfile = fopen("in.expr", "r");
   if (!myfile) {
