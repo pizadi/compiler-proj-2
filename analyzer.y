@@ -120,7 +120,7 @@ arg_decl : datatype id {$$ = strdup(""); sprintf($$, "<arg_decl> %s %s", $1, $2)
 
 field_decl : datatype var_decl_p TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<field_decl> %s %s %s", $1, $2, mode?"TOKEN_SEMICOLON":$3);};
 
-var_decl_p : var_decl_c var_decl_r {$$ = strdup(""); sprintf($$, "<var_decl_p> %s %s %s", $1, $2);};
+var_decl_p : var_decl_c var_decl_r {$$ = strdup(""); sprintf($$, "<var_decl_p> %s %s", $1, $2);};
 
 var_decl_r : TOKEN_COMMA var_decl_c var_decl_r {$$ = strdup(""); sprintf($$, "<decl_r> %s %s %s", mode?"TOKEN_COMMA":$1, $2, $3);}
 | /*empty*/ {$$ = strdup(""); sprintf($$, "<var_decl_r>");};
@@ -139,17 +139,17 @@ line_r : statement line_r {$$ = strdup(""); sprintf($$, "<line_r> %s %s", $1, $2
 | var_decl line_r {$$ = strdup(""); sprintf($$, "<line_r> %s %s", $1, $2);}
 | /*empty*/ {$$ = strdup(""); sprintf($$, "<line_r>");};
 
-statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {};
-| method_call TOKEN_SEMICOLON {}
-| if_block {}
-| for_block {}
-| TOKEN_RETURN expr TOKEN_SEMICOLON {}
-| TOKEN_BREAKSTMT TOKEN_SEMICOLON {}
-| TOKEN_CONTINUESTMT TOKEN_SEMICOLON {}
-| block {};
+statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<statement> %s %s %s %s", $1, mode?"TOKEN_ASSIGNOP":$2, $3, mode?"TOKEN_SEMICOLON":$4);};
+| method_call TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<statement> %s %s", $1, mode?"TOKEN_SEMICOLON":$2);}
+| if_block {$$ = strdup(""); sprintf($$, "<statement> %s", $1);}
+| for_block {$$ = strdup(""); sprintf($$, "<statement> %s", $1);}
+| TOKEN_RETURN expr TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<statement> %s %s %s",mode?"TOKEN_RETURN":$1, $2,mode?"TOKEN_SEMICOLON":$3);}
+| TOKEN_BREAKSTMT TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<statement> %s %s",mode?"TOKEN_BREAKSTMT":$1, mode?"TOKEN_SEMICOLON":$2);}
+| TOKEN_CONTINUESTMT TOKEN_SEMICOLON {$$ = strdup(""); sprintf($$, "<statement> %s %s",mode?"TOKEN_CONTINUESTMT":$1, mode?"TOKEN_SEMICOLON":$2);}
+| block {$$ = strdup(""); sprintf($$, "<statement> %s", $1);};
 
-methodtype : datatype {}
-| TOKEN_VOIDTYPE {};
+methodtype : datatype {$$ = strdup(""); sprintf($$, "<methodtype> %s", $1);}
+| TOKEN_VOIDTYPE {$$ = strdup(""); sprintf($$, "<methodtype> %s",mode?"TOKEN_VOIDTYPE":$1);};
 
 datatype : TOKEN_INTTYPE {$$ = strdup(""); sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);}
 | TOKEN_STRINGTYPE {$$ = strdup(""); sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);}
@@ -164,15 +164,15 @@ arg_p : arg arg_r {$$ = strdup(""); sprintf($$, "<arg_p> %s %s", $1, $2);}
 arg_r : TOKEN_COMMA arg arg_r {$$ = strdup(""); sprintf($$, "<arg_r> %s %s", mode?"TOKEN_COMMA":$1, $2);}
 | arg {$$ = strdup(""); sprintf($$, "<arg_r> %s", $1);};
 
-arg : expr {}
-| TOKEN_STRINGCONST {};
+arg : expr {$$ = strdup(""); sprintf($$, "<arg> %s", $1);}
+| TOKEN_STRINGCONST {$$ = strdup(""); sprintf($$, "<arg> %s",mode?"TOKEN_STRINGCONST":$1);};
 
-expr : prod TOKEN_ARITHMATICOP_1 expr {}
-| prod {};
+expr : prod TOKEN_ARITHMATICOP_1 expr {$$ = strdup(""); sprintf($$, "<expr> %s %s %s", $1,mode?"TOKEN_ARITHMATICOP_1":$2, $3);}
+| prod {$$ = strdup(""); sprintf($$, "<expr> %s", $1);};
 
-prod : atm TOKEN_ARITHMATICOP_2 prod {}
-| TOKEN_LOGICOP prod {}
-| atm {};
+prod : atm TOKEN_ARITHMATICOP_2 prod {$$ = strdup(""); sprintf($$, "<prod> %s %s %s", $1, mode?"TOKEN_ARITHMATICOP_2":$2, $3);}
+| TOKEN_LOGICOP prod {$$ = strdup(""); sprintf($$, "<prod> %s %s",mode?"TOKEN_LOGICOP":$1, $2);}
+| atm {$$ = strdup(""); sprintf($$, "<prod> %s", $1);};
 
 atm : TOKEN_ID ind {$$ = strdup(""); sprintf($$, "<atm> %s %s", mode?"TOKEN_ID":$1, $2);}
 | char_literal {$$ = strdup(""); sprintf($$, "<atm> %s", $1);}
@@ -203,13 +203,13 @@ int_literal : TOKEN_DECIMALCONST {
 	else sprintf($$, "<int_literal> %x", $1);
 };
 
-if_block : TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block {}
-| TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {};
+if_block : TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block {$$ = strdup(""); sprintf($$, "<if_block> %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5);}
+| TOKEN_IFCONDITION TOKEN_LP expr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {$$ = strdup(""); sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5, mode?"TOKEN_ELSECONDITION":$6, $7);};
 
-if_block_r : if_block {}
-| block {};
+if_block_r : if_block {$$ = strdup(""); sprintf($$, "<if_block_r> %s", $1);}
+| block {$$ = strdup(""); sprintf($$, "<if_block_r> %s", $1);};
 
-for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA expr TOKEN_RP block {};
+for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA expr TOKEN_RP block {$$ = strdup(""); sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_COMMA":$4, $5, mode?"TOKEN_RP":$6, $7);};
 
 char_literal : TOKEN_CHARCONST {
 	$$ = strdup("");
