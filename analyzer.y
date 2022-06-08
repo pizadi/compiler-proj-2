@@ -64,6 +64,7 @@
 %type <str> program
 %type <str> decl_r
 %type <str> method_decl
+%type <str> arg_decl_p
 %type <str> arg_decl_r
 %type <str> arg_decl
 %type <str> field_decl
@@ -78,7 +79,9 @@
 %type <str> methodtype
 %type <str> datatype
 %type <str> lval
+%type <str> arg_p
 %type <str> arg_r
+%type <str> callout_arg_p
 %type <str> callout_arg_r
 %type <str> arg
 %type <str> expr
@@ -105,10 +108,13 @@ decl_r : method_decl decl_r {$$ = strdup(""); sprintf($$, "<decl_r> %s %s", $1, 
 | field_decl decl_r {$$ = strdup(""); sprintf($$, "<decl_r> %s %s", $1, $2);}
 | /*empty*/ {$$ = strdup(""); sprintf($$, "<decl_r>");};
 
-method_decl : methodtype id TOKEN_LP arg_decl_r TOKEN_RP block_r field_decl decl_r {$$ = strdup(""); sprintf($$, "<method_decl> %s %s %s %s %s %s", $1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);};
+method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block_r field_decl decl_r {$$ = strdup(""); sprintf($$, "<method_decl> %s %s %s %s %s %s", $1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);};
 
-arg_decl_r : arg_decl TOKEN_COMMA arg_decl_r {$$ = strdup(""); sprintf($$, "<arg_decl_r> %s %s", mode?"TOKEN_COMMA":$1, $2);}
-| arg_decl {$$ = strdup(""); sprintf($$, "<arg_decl_r>");};
+arg_decl_p : arg_decl arg_decl_r {$$ = strdup(""); sprintf($$, "<arg_decl_p> %s %s", $1, $2);}
+| /*empty*/ {$$ = strdup(""); sprintf($$, "<arg_decl_p>");};
+
+arg_decl_r : TOKEN_COMMA arg_decl arg_decl_r {$$ = strdup(""); sprintf($$, "<arg_decl_r> %s %s %s", mode?"TOKEN_COMMA":$1, $2, $3);}
+| /*empty*/ {$$ = strdup(""); sprintf($$, "<arg_decl_r>");};
 
 arg_decl : datatype id {$$ = strdup(""); sprintf($$, "<arg_decl> %s %s", $1, $2);};
 
@@ -145,15 +151,18 @@ statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {};
 methodtype : datatype {}
 | TOKEN_VOIDTYPE {};
 
-datatype : TOKEN_INTTYPE {}
-| TOKEN_STRINGTYPE {}
-| TOKEN_CHARTYPE {};
+datatype : TOKEN_INTTYPE {$$ = strdup(""); sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);}
+| TOKEN_STRINGTYPE {$$ = strdup(""); sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);}
+| TOKEN_CHARTYPE {$$ = strdup(""); sprintf($$, "<datatype> %s", mode?"TOKEN_CHARTYPE":$1);};
 
-lval : TOKEN_ID {}
-| TOKEN_ID TOKEN_LB expr TOKEN_RB {};
+lval : TOKEN_ID {$$ = strdup(""); sprintf($$, "<lval> %s", mode?"TOKEN_ID":$1);}
+| TOKEN_ID ind {$$ = strdup(""); sprintf($$, "<lval> %s %s", mode?"TOKEN_ID":$1, $2);};
 
-arg_r : arg TOKEN_COMMA arg_r {}
-| arg {};
+arg_p : arg arg_r {$$ = strdup(""); sprintf($$, "<arg_p> %s %s", $1, $2);}
+| /*empty*/ {$$ = strdup(""); sprintf($$, "<arg_p>");};
+
+arg_r : TOKEN_COMMA arg arg_r {$$ = strdup(""); sprintf($$, "<arg_r> %s %s", mode?"TOKEN_COMMA":$1, $2);}
+| arg {$$ = strdup(""); sprintf($$, "<arg_r> %s", $1);};
 
 arg : expr {}
 | TOKEN_STRINGCONST {};
@@ -173,16 +182,15 @@ atm : TOKEN_ID ind {$$ = strdup(""); sprintf($$, "<atm> %s %s", mode?"TOKEN_ID":
 ind : TOKEN_LB expr TOKEN_RB {$$ = strdup(""); sprintf($$, "<ind> %s %s %s", mode?"TOKEN_LB":$1, $2, mode?"TOKEN_RB":$3);}
 | /*empty*/ {$$ = strdup("<ind>");};
 
-method_call : method_name TOKEN_LP arg_r TOKEN_RP {};
-| TOKEN_CALLOUT TOKEN_LP callout_arg_r TOKEN_RP {};
+method_call : method_name TOKEN_LP arg_p TOKEN_RP {$$ = strdup(""); sprintf($$, "<method_call> %s %s %s %s", $1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4);};
+| TOKEN_CALLOUT TOKEN_LP callout_arg_p TOKEN_RP {$$ = strdup(""); sprintf($$, "<method_call> %s %s %s %s", mode?"TOKEN_CALLOUT":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4);};
 
-callout_arg_r : TOKEN_STRINGCONST {}
-| TOKEN_STRINGCONST TOKEN_COMMA arg_r {};
+callout_arg_p : TOKEN_STRINGCONST arg_r {$$ = strdup(""); sprintf($$, "<callout_arg_p> %s %s", mode?"TOKEN_STRINGCONST":$1, $2);};
 
-method_name : id {};
+method_name : id {$$ = strdup(""); sprintf($$, "<method_name> %s", $1);};
 
-id : TOKEN_ID {}
-| TOKEN_MAINFUNC {};
+id : TOKEN_ID {$$ = strdup(""); sprintf($$, "<id> %s", mode?"TOKEN_ID":$1);}
+| TOKEN_MAINFUNC {$$ = strdup(""); sprintf($$, "<id> %s", mode?"TOKEN_MAINFUNC":$1);};
 
 int_literal : TOKEN_DECIMALCONST {
 	$$ = strdup("");
