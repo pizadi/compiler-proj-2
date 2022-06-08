@@ -54,6 +54,8 @@ void yyerror(const char *s);
 %type program
 %type decl_r
 %type method_decl
+%type arg_decl_r
+%type arg_decl
 %type field_decl
 %type decl_r
 %type var_decl
@@ -86,7 +88,12 @@ decl_r : method_decl decl_r {}
 	| method_decl decl_r {}
 	| /*empty*/ {};
 
-method_decl : methodtype id TOKEN_LP expr_r TOKEN_RP block_r {};
+method_decl : methodtype id TOKEN_LP arg_decl_r TOKEN_RP block_r {};
+
+arg_decl_r : arg_decl TOKEN_COMMA arg_decl_r {}
+	| arg_decl {};
+
+arg_decl : datatype id {};
 
 field_decl : datatype decl_r TOKEN_SEMICOLON {};
 
