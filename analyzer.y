@@ -536,6 +536,7 @@ char_literal : TOKEN_CHARCONST {
 	$$ = (char*) malloc(32);
 	if (mode) sprintf($$, "<char_literal> TOKEN_CHARCONST");
 	else sprintf($$, "<char_literal> %s", $1);
+	free($1);
 };
 
 %%
