@@ -19,7 +19,8 @@
 \/\/.* { return TOKEN_COMMENT;}
 
 0x[0-9a-fA-F]{1,8} {
-	yylval.str = strdup(yytext);
+	int temp;
+	sscanf(yytext, "%x", &temp);
 	return TOKEN_HEX;
 }
 
@@ -74,7 +75,7 @@
 [-]?([1-9][0-9]*|0) {
 	temp = atoll(yytext);
 	if (temp <= 2147483647 && temp >= -2147483648){
-		yylval.str = strdup(yytext);
+		yylval.ival = atoi(yytext);
 	}
 	else {
 		std::cout << "[" << line << "]ERROR: Decimal constant " << yytext << " out of range." << std::endl;
