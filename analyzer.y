@@ -63,6 +63,7 @@
 // type definitions
 %type <str> program
 %type <str> decl_r
+%type <str> decl
 %type <str> method_decl
 %type <str> arg_decl_p
 %type <str> arg_decl_r
@@ -75,6 +76,7 @@
 %type <str> block_r
 %type <str> block
 %type <str> line_r
+%type <str> line
 %type <str> statement
 %type <str> methodtype
 %type <str> datatype
@@ -82,7 +84,6 @@
 %type <str> arg_p
 %type <str> arg_r
 %type <str> callout_arg_p
-%type <str> callout_arg_r
 %type <str> arg
 %type <str> expr
 %type <str> prod
@@ -105,24 +106,29 @@ program : TOKEN_CLASS TOKEN_PROGRAMCLASS TOKEN_LCB decl_r TOKEN_RCB {
 	printf("<program> %s %s %s %s %s\n", mode?"TOKEN_CLASS ":$1, mode?"TOKEN_PROGRAMCLASS ":$2, mode?"TOKEN_LCB ":$3, $4, mode?"TOKEN_RCB ":$5);
 };
 
-decl_r : method_decl decl_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
-	sprintf($$, "<decl_r> %s %s", $1, $2);
-	free($1);
-	free($2);
-}
-| field_decl decl_r {
+decl_r : decl decl_r {
 	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
 	sprintf($$, "<decl_r> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(9);
+	$$ = (char*) malloc(11);
 	sprintf($$, "<decl_r>");
+}
+
+decl : method_decl {
+	$$ = (char*) malloc(strlen($1)+11);
+	sprintf($$, "<decl> %s", $1);
+	free($1);
+}
+| field_decl {
+	$$ = (char*) malloc(strlen($1)+11);
+	sprintf($$, "<decl> %s", $1);
+	free($1);
 };
 
-method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block_r field_decl decl_r {
+method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block {
 	$$ = (char*) malloc(strlen($1)+strlen($2)+strlen($4)+strlen($6)+37);
 	sprintf($$, "<method_decl> %s %s %s %s %s %s", $1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);
 	free($1);
@@ -229,13 +235,7 @@ block : TOKEN_LCB line_r TOKEN_RCB {
 	free($3);
 };
 
-line_r : statement line_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
-	sprintf($$, "<line_r> %s %s", $1, $2);
-	free($1);
-	free($2);
-}
-| var_decl line_r {
+line_r : line line_r {
 	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
 	sprintf($$, "<line_r> %s %s", $1, $2);
 	free($1);
@@ -244,6 +244,17 @@ line_r : statement line_r {
 | /*empty*/ {
 	$$ = (char*) malloc(9);
 	sprintf($$, "<line_r>");
+}
+
+line : statement {
+	$$ = (char*) malloc(strlen($1)+11);
+	sprintf($$, "<line> %s %s", $1);
+	free($1);
+}
+| var_decl {
+	$$ = (char*) malloc(strlen($1)+11);
+	sprintf($$, "<line> %s %s", $1);
+	free($1);
 };
 
 statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {

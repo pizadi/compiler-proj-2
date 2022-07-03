@@ -1,3 +1,6 @@
 class Program {
 int ad;
+void main(){
+ad = a;
+}
 }
