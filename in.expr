@@ -1,6 +1,7 @@
 class Program {
-int ad;
-void main(){
-ad = a;
+
+int main(){
+int a, b;
+a = d;
 }
 }

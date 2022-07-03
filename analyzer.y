@@ -255,6 +255,12 @@ line : statement {
 	$$ = (char*) malloc(strlen($1)+11);
 	sprintf($$, "<line> %s %s", $1);
 	free($1);
+	
+};
+|   field_decl {
+	$$ = (char*) malloc(strlen($1)+11);
+	sprintf($$, "<decl> %s", $1);
+	free($1);
 };
 
 statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {
@@ -306,11 +312,21 @@ statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {
 	free($1);
 };
 
-methodtype : datatype {
-	$$ = (char*) malloc(strlen($1)+14);
-	sprintf($$, "<methodtype> %s", $1);
+methodtype : TOKEN_INTTYPE {
+	$$ = (char*) malloc(25);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);
 	free($1);
 }
+| TOKEN_STRINGTYPE {
+	$$ = (char*) malloc(28);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);
+	free($1);
+}
+| TOKEN_CHARTYPE {
+	$$ = (char*) malloc(26);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_CHARTYPE":$1);
+	free($1);
+};
 | TOKEN_VOIDTYPE {
 	$$ = (char*) malloc(28);
 	sprintf($$, "<methodtype> %s",mode?"TOKEN_VOIDTYPE":$1);
