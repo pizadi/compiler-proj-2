@@ -3,5 +3,8 @@ class Program {
 int main(){
 int a, b;
 a = d;
+if (a == b) {
+	break;
+}
 }
 }

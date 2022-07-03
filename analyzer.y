@@ -206,12 +206,12 @@ var_decl : TOKEN_ID {
 	sprintf($$, "<var_decl> %s", $1);
 	free($1);
 }
-| TOKEN_ID TOKEN_LB int_literal TOKEN_RB {
-	$$ = (char*) malloc(strlen($1)+strlen($3)+39);
-	sprintf($$, "<var_decl> %s %s %s %s", mode?"TOKEN_ID":$1, mode?"TOKEN_LB":$2, $3, mode?"TOKEN_RB":$4);
+| TOKEN_ID TOKEN_LB TOKEN_DECIMALCONST TOKEN_RB {
+	$$ = (char*) malloc(strlen($1)+57);
+	if (mode) sprintf($$, "<var_decl> %s %s %s %s", "TOKEN_ID", "TOKEN_LB", "TOKEN_DECIMALCONST", "TOKEN_RB");
+	else sprintf($$, "<var_decl> %s %s %d %s", $1, $2, $3, $4);
 	free($1);
 	free($2);
-	free($3);
 	free($4);
 };
 
@@ -438,10 +438,15 @@ atm : TOKEN_ID ind {
 	sprintf($$, "<atm> %s", $1);
 	free($1);
 }
-| int_literal {
-	$$ = (char*) malloc(strlen($1)+7);
-	sprintf($$, "<atm> %s", $1);
-	free($1);
+| TOKEN_DECIMALCONST {
+	$$ = (char*) malloc(32);
+	if (mode) sprintf($$, "<atm> %s", "TOKEN_DECIMALCONST");
+	else sprintf($$, "<atm> %d", $1);
+}
+| TOKEN_HEX {
+	$$ = (char*) malloc(16);
+	if (mode) sprintf($$, "<atm> %s", "TOKEN_HEX");
+	else sprintf($$, "<atm> %x", $1);
 }
 | TOKEN_LP expr TOKEN_RP {
 	$$ = (char*) malloc(strlen($2)+23);
