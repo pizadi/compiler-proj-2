@@ -80,6 +80,7 @@
 	else {
 		std::cout << "[" << line << "]ERROR: Decimal constant " << yytext << " out of range." << std::endl;
 	}
+	return TOKEN_DECIMALCONST;
 }
 
 "+" { yylval.str = strdup(yytext); return TOKEN_ARITHMATICOP_1;}

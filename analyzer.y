@@ -248,12 +248,12 @@ line_r : line line_r {
 
 line : statement {
 	$$ = (char*) malloc(strlen($1)+11);
-	sprintf($$, "<line> %s %s", $1);
+	sprintf($$, "<line> %s", $1);
 	free($1);
 }
 | var_decl {
 	$$ = (char*) malloc(strlen($1)+11);
-	sprintf($$, "<line> %s %s", $1);
+	sprintf($$, "<line> %s", $1);
 	free($1);
 	
 };
