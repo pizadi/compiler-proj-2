@@ -5,7 +5,9 @@ return a + b;
 void main(){
 int a, b;
 a = 3;
-add();
+add("socks",3*b + c%2,a);
+callout("benis", 3, "perkele");
 if (3<5) {}
+for b = 4, 12 < 4 {}
 }
 }
