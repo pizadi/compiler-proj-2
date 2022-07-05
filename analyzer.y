@@ -559,9 +559,9 @@ if_block_r : if_block {
 	free($1);
 };
 
-for_block : TOKEN_LOOP TOKEN_ID TOKEN_ASSIGNOP lexpr TOKEN_COMMA lexpr block {
-	$$ = (char*) malloc(strlen($4)+strlen($6)+strlen($7)+64);
-	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_ID":$2, mode?"TOKEN_ASSIGNOP":$3, $4, mode?"TOKEN_COMMA":$5, $6, $7);
+for_block : TOKEN_LOOP TOKEN_ID ind TOKEN_ASSIGNOP lexpr TOKEN_COMMA lexpr block {
+	$$ = (char*) malloc(strlen($5)+strlen($7)+strlen($8)+64);
+	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_ID":$2, $3, mode?"TOKEN_ASSIGNOP":$4, $5, mode?"TOKEN_COMMA":$6, $7, $8);
 	free($1);
 	free($2);
 	free($3);
@@ -569,6 +569,7 @@ for_block : TOKEN_LOOP TOKEN_ID TOKEN_ASSIGNOP lexpr TOKEN_COMMA lexpr block {
 	free($5);
 	free($6);
 	free($7);
+	free($8);
 };
 
 char_literal : TOKEN_CHARCONST {
