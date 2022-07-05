@@ -5,6 +5,6 @@ return a + b;
 void main(){
 int a, b;
 a = 3;
-add(a);
+add();
 }
 }

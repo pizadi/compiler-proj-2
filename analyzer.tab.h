@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_ANALYZER_TAB_H_INCLUDED
 # define YY_YY_ANALYZER_TAB_H_INCLUDED
@@ -44,49 +45,54 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TOKEN_COMMENT = 258,
-    TOKEN_HEX = 259,
-    TOKEN_WHITESPACE = 260,
-    TOKEN_BOOLEANTYPE = 261,
-    TOKEN_BREAKSTMT = 262,
-    TOKEN_CALLOUT = 263,
-    TOKEN_CLASS = 264,
-    TOKEN_CONTINUESTMT = 265,
-    TOKEN_INTTYPE = 266,
-    TOKEN_STRINGTYPE = 267,
-    TOKEN_CHARTYPE = 268,
-    TOKEN_VOIDTYPE = 269,
-    TOKEN_MAINFUNC = 270,
-    TOKEN_LOOP = 271,
-    TOKEN_RETURN = 272,
-    TOKEN_IFCONDITION = 273,
-    TOKEN_ELSECONDITION = 274,
-    TOKEN_BOOLEANCONST = 275,
-    TOKEN_PROGRAMCLASS = 276,
-    TOKEN_DECIMALCONST = 277,
-    TOKEN_ARITHMATICOP_1 = 278,
-    TOKEN_ARITHMATICOP_2 = 279,
-    TOKEN_CONDITIONOP = 280,
-    TOKEN_RELATIONOP = 281,
-    TOKEN_ASSIGNOP = 282,
-    TOKEN_LOGICOP = 283,
-    TOKEN_LP = 284,
-    TOKEN_RP = 285,
-    TOKEN_LCB = 286,
-    TOKEN_RCB = 287,
-    TOKEN_LB = 288,
-    TOKEN_RB = 289,
-    TOKEN_SEMICOLON = 290,
-    TOKEN_COMMA = 291,
-    TOKEN_STRINGCONST = 292,
-    TOKEN_CHARCONST = 293,
-    TOKEN_ID = 294
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    TOKEN_COMMENT = 258,           /* TOKEN_COMMENT  */
+    TOKEN_HEX = 259,               /* TOKEN_HEX  */
+    TOKEN_WHITESPACE = 260,        /* TOKEN_WHITESPACE  */
+    TOKEN_BOOLEANTYPE = 261,       /* TOKEN_BOOLEANTYPE  */
+    TOKEN_BREAKSTMT = 262,         /* TOKEN_BREAKSTMT  */
+    TOKEN_CALLOUT = 263,           /* TOKEN_CALLOUT  */
+    TOKEN_CLASS = 264,             /* TOKEN_CLASS  */
+    TOKEN_CONTINUESTMT = 265,      /* TOKEN_CONTINUESTMT  */
+    TOKEN_INTTYPE = 266,           /* TOKEN_INTTYPE  */
+    TOKEN_STRINGTYPE = 267,        /* TOKEN_STRINGTYPE  */
+    TOKEN_CHARTYPE = 268,          /* TOKEN_CHARTYPE  */
+    TOKEN_VOIDTYPE = 269,          /* TOKEN_VOIDTYPE  */
+    TOKEN_MAINFUNC = 270,          /* TOKEN_MAINFUNC  */
+    TOKEN_LOOP = 271,              /* TOKEN_LOOP  */
+    TOKEN_RETURN = 272,            /* TOKEN_RETURN  */
+    TOKEN_IFCONDITION = 273,       /* TOKEN_IFCONDITION  */
+    TOKEN_ELSECONDITION = 274,     /* TOKEN_ELSECONDITION  */
+    TOKEN_BOOLEANCONST = 275,      /* TOKEN_BOOLEANCONST  */
+    TOKEN_PROGRAMCLASS = 276,      /* TOKEN_PROGRAMCLASS  */
+    TOKEN_DECIMALCONST = 277,      /* TOKEN_DECIMALCONST  */
+    TOKEN_ARITHMATICOP_1 = 278,    /* TOKEN_ARITHMATICOP_1  */
+    TOKEN_ARITHMATICOP_2 = 279,    /* TOKEN_ARITHMATICOP_2  */
+    TOKEN_CONDITIONOP = 280,       /* TOKEN_CONDITIONOP  */
+    TOKEN_RELATIONOP = 281,        /* TOKEN_RELATIONOP  */
+    TOKEN_ASSIGNOP = 282,          /* TOKEN_ASSIGNOP  */
+    TOKEN_LOGICOP = 283,           /* TOKEN_LOGICOP  */
+    TOKEN_LP = 284,                /* TOKEN_LP  */
+    TOKEN_RP = 285,                /* TOKEN_RP  */
+    TOKEN_LCB = 286,               /* TOKEN_LCB  */
+    TOKEN_RCB = 287,               /* TOKEN_RCB  */
+    TOKEN_LB = 288,                /* TOKEN_LB  */
+    TOKEN_RB = 289,                /* TOKEN_RB  */
+    TOKEN_SEMICOLON = 290,         /* TOKEN_SEMICOLON  */
+    TOKEN_COMMA = 291,             /* TOKEN_COMMA  */
+    TOKEN_STRINGCONST = 292,       /* TOKEN_STRINGCONST  */
+    TOKEN_CHARCONST = 293,         /* TOKEN_CHARCONST  */
+    TOKEN_ID = 294                 /* TOKEN_ID  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -98,7 +104,7 @@ union YYSTYPE
 	char * str;
 	int ival;
 
-#line 102 "analyzer.tab.h"
+#line 108 "analyzer.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -109,6 +115,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+
 int yyparse (void);
+
 
 #endif /* !YY_YY_ANALYZER_TAB_H_INCLUDED  */
