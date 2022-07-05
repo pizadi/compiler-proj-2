@@ -128,19 +128,9 @@ decl : method_decl {
 	free($1);
 };
 
-method_decl : datatype id TOKEN_LP arg_decl_p TOKEN_RP block {
+method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block {
 	$$ = (char*) malloc(strlen($1)+strlen($2)+strlen($4)+strlen($6)+37);
 	sprintf($$, "<method_decl> %s %s %s %s %s %s", $1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);
-	free($1);
-	free($2);
-	free($3);
-	free($4);
-	free($5);
-	free($6);
-}
-| TOKEN_VOIDTYPE id TOKEN_LP arg_decl_p TOKEN_RP block {
-	$$ = (char*) malloc(strlen($2)+strlen($4)+strlen($6)+50);
-	sprintf($$, "<method_decl> %s %s %s %s %s %s",  mode?"TOKEN_VOIDTYPE":$1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);
 	free($1);
 	free($2);
 	free($3);
@@ -322,11 +312,21 @@ statement : lval TOKEN_ASSIGNOP expr TOKEN_SEMICOLON {
 	free($1);
 };
 
-methodtype : datatype {
-	$$ = (char*) malloc(strlen($1)+14);
-	sprintf($$, "<methodtype> %s", $1);
+methodtype : TOKEN_INTTYPE {
+	$$ = (char*) malloc(25);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);
 	free($1);
 }
+| TOKEN_STRINGTYPE {
+	$$ = (char*) malloc(28);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);
+	free($1);
+}
+| TOKEN_CHARTYPE {
+	$$ = (char*) malloc(26);
+	sprintf($$, "<datatype> %s", mode?"TOKEN_CHARTYPE":$1);
+	free($1);
+};
 | TOKEN_VOIDTYPE {
 	$$ = (char*) malloc(28);
 	sprintf($$, "<methodtype> %s",mode?"TOKEN_VOIDTYPE":$1);
