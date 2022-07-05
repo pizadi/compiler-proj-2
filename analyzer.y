@@ -584,7 +584,7 @@ if_block_r : if_block {
 };
 
 for_block : TOKEN_LOOP TOKEN_ID ind TOKEN_ASSIGNOP mexpr TOKEN_COMMA mexpr block {
-	$$ = (char*) malloc(strlen($5)+strlen($7)+strlen($8)+64);
+	$$ = (char*) malloc(strlen($5)+strlen($7)+strlen($8)+128);
 	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_ID":$2, $3, mode?"TOKEN_ASSIGNOP":$4, $5, mode?"TOKEN_COMMA":$6, $7, $8);
 	free($1);
 	free($2);
