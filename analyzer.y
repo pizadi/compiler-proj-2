@@ -252,12 +252,6 @@ line : statement {
 	sprintf($$, "<line> %s", $1);
 	free($1);
 }
-| var_decl {
-	$$ = (char*) malloc(strlen($1)+11);
-	sprintf($$, "<line> %s", $1);
-	free($1);
-	
-};
 |   field_decl {
 	$$ = (char*) malloc(strlen($1)+11);
 	sprintf($$, "<decl> %s", $1);
