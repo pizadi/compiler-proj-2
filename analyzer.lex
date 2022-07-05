@@ -97,7 +97,7 @@
 
 "||" { yylval.str = strdup(yytext); return TOKEN_CONDITIONOP;}
 
-"=<" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
+"<=" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
 "<" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
@@ -111,7 +111,7 @@
 
 "!" { yylval.str = strdup(yytext); return TOKEN_LOGICOP;}
 
-"=>" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
+">=" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 
 "==" { yylval.str = strdup(yytext); return TOKEN_RELATIONOP;}
 

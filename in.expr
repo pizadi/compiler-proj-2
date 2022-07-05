@@ -3,11 +3,11 @@ int add(int a, int b){
 return a + b;
 }
 void main(){
-int a, b;
+int a[5], b[1];
 a[4] = 3;
 add("socks",3*b + c%2,a);
 callout("benis", 3, "perkele");
-if (3<5) {}
-for b[3] = 4, 12 < 4 {}
+if (3<=5) {}
+for b[3] = 4, 12 >= 4 {}
 }
 }
