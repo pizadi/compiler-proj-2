@@ -8,8 +8,8 @@ void main(){
 int a[5], b[1];
 a[4] = b[0] + 3;
 add("socks",3*b + c%2,a);
-callout("benis", 3, "perkele");
-if (3<=5) {}
+callout("is", 3);
+if (3<=5 && 4 >= 5) {}
 for b[3] = 4, 12 >= 4 {}
 }
 }

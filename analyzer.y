@@ -85,6 +85,7 @@
 %type <str> arg_r
 %type <str> callout_arg_p
 %type <str> arg
+%type <str> mexpr
 %type <str> lexpr
 %type <str> expr
 %type <str> prod
@@ -268,7 +269,7 @@ line : statement {
 	free($1);
 };
 
-statement : lval TOKEN_ASSIGNOP lexpr TOKEN_SEMICOLON {
+statement : lval TOKEN_ASSIGNOP mexpr TOKEN_SEMICOLON {
 	$$ = (char*) malloc(strlen($1)+strlen($3)+64);
 	sprintf($$, "<statement> %s %s %s %s", $1, mode?"TOKEN_ASSIGNOP":$2, $3, mode?"TOKEN_SEMICOLON":$4);
 	free($1);
@@ -292,7 +293,7 @@ statement : lval TOKEN_ASSIGNOP lexpr TOKEN_SEMICOLON {
 	sprintf($$, "<statement> %s", $1);
 	free($1);
 }
-| TOKEN_RETURN lexpr TOKEN_SEMICOLON {
+| TOKEN_RETURN mexpr TOKEN_SEMICOLON {
 	$$ = (char*) malloc(strlen($2)+64);
 	sprintf($$, "<statement> %s %s %s",mode?"TOKEN_RETURN":$1, $2,mode?"TOKEN_SEMICOLON":$3);
 	free($1);
@@ -388,7 +389,7 @@ arg_r : TOKEN_COMMA arg arg_r {
 	sprintf($$, "<arg_r>");
 };
 
-arg : lexpr {
+arg : mexpr {
 	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<arg> %s", $1);
 	free($1);
@@ -396,6 +397,19 @@ arg : lexpr {
 | TOKEN_STRINGCONST {
 	$$ = (char*) malloc(strlen($1)+32);
 	sprintf($$, "<arg> %s",mode?"TOKEN_STRINGCONST":$1);
+	free($1);
+};
+
+mexpr : lexpr TOKEN_CONDITIONOP lexpr {
+	$$ = (char*) malloc(strlen($1)+strlen($3)+64);
+	sprintf($$, "<mexpr> %s %s %s", $1, mode?"TOKEN_CONDITIONOP":$2, $3);
+	free($1);
+	free($2);
+	free($3);
+}
+| lexpr {
+	$$ = (char*) malloc(strlen($1)+16);
+	sprintf($$, "<mexpr> %s", $1);
 	free($1);
 };
 
@@ -465,7 +479,7 @@ atm : TOKEN_ID ind {
 	if (mode) sprintf($$, "<atm> %s", "TOKEN_HEX");
 	else sprintf($$, "<atm> %x", $1);
 }
-| TOKEN_LP lexpr TOKEN_RP {
+| TOKEN_LP mexpr TOKEN_RP {
 	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<atm> %s %s %s", mode?"TOKEN_LP":$1, $2, mode?"TOKEN_RP":$3);
 	free($1);
@@ -473,7 +487,7 @@ atm : TOKEN_ID ind {
 	free($3);
 };
 
-ind : TOKEN_LB lexpr TOKEN_RB {
+ind : TOKEN_LB mexpr TOKEN_RB {
 	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<ind> %s %s %s", mode?"TOKEN_LB":$1, $2, mode?"TOKEN_RB":$3);
 	free($1);
@@ -537,7 +551,7 @@ int_literal : TOKEN_DECIMALCONST {
 	else sprintf($$, "<int_literal> %x", $1);
 };
 
-if_block : TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block {
+if_block : TOKEN_IFCONDITION TOKEN_LP mexpr TOKEN_RP block {
 	$$ = (char*) malloc(strlen($3)+strlen($5)+64);
 	sprintf($$, "<if_block> %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5);
 	free($1);
@@ -546,7 +560,7 @@ if_block : TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block {
 	free($4);
 	free($5);
 }
-| TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {
+| TOKEN_IFCONDITION TOKEN_LP mexpr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {
 	$$ = (char*) malloc(strlen($3)+strlen($5)+strlen($7)+128);
 	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5, mode?"TOKEN_ELSECONDITION":$6, $7);
 	free($1);
@@ -569,7 +583,7 @@ if_block_r : if_block {
 	free($1);
 };
 
-for_block : TOKEN_LOOP TOKEN_ID ind TOKEN_ASSIGNOP lexpr TOKEN_COMMA lexpr block {
+for_block : TOKEN_LOOP TOKEN_ID ind TOKEN_ASSIGNOP mexpr TOKEN_COMMA mexpr block {
 	$$ = (char*) malloc(strlen($5)+strlen($7)+strlen($8)+64);
 	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_ID":$2, $3, mode?"TOKEN_ASSIGNOP":$4, $5, mode?"TOKEN_COMMA":$6, $7, $8);
 	free($1);
