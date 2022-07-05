@@ -373,10 +373,9 @@ arg_r : TOKEN_COMMA arg arg_r {
 	free($1);
 	free($2);
 }
-| arg {
-	$$ = (char*) malloc(strlen($1)+9);
-	sprintf($$, "<arg_r> %s", $1);
-	free($1);
+| /*empty*/ {
+	$$ = (char*) malloc(9);
+	sprintf($$, "<arg_r>");
 };
 
 arg : lexpr {
