@@ -108,29 +108,29 @@ program : TOKEN_CLASS TOKEN_PROGRAMCLASS TOKEN_LCB decl_r TOKEN_RCB {
 };
 
 decl_r : decl decl_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+16);
 	sprintf($$, "<decl_r> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(11);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<decl_r>");
 }
 
 decl : method_decl {
-	$$ = (char*) malloc(strlen($1)+11);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<decl> %s", $1);
 	free($1);
 }
 | field_decl {
-	$$ = (char*) malloc(strlen($1)+11);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<decl> %s", $1);
 	free($1);
 };
 
 method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+strlen($4)+strlen($6)+37);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+strlen($4)+strlen($6)+64);
 	sprintf($$, "<method_decl> %s %s %s %s %s %s", $1, $2, mode?"TOKEN_LP":$3, $4, mode?"TOKEN_RP":$5, $6);
 	free($1);
 	free($2);
@@ -141,37 +141,37 @@ method_decl : methodtype id TOKEN_LP arg_decl_p TOKEN_RP block {
 };
 
 arg_decl_p : arg_decl arg_decl_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+15);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+32);
 	sprintf($$, "<arg_decl_p> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(13);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<arg_decl_p>");
 };
 
 arg_decl_r : TOKEN_COMMA arg_decl arg_decl_r {
-	$$ = (char*) malloc(strlen($2) + strlen($3) + 27);
+	$$ = (char*) malloc(strlen($2) + strlen($3) + 32);
 	sprintf($$, "<arg_decl_r> %s %s %s", mode?"TOKEN_COMMA":$1, $2, $3);
 	free($1);
 	free($2);
 	free($3);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(13);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<arg_decl_r>");
 };
 
 arg_decl : datatype id {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+13);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+16);
 	sprintf($$, "<arg_decl> %s %s", $1, $2);
 	free($1);
 	free($2);
 };
 
 field_decl : datatype var_decl_p TOKEN_SEMICOLON {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+31);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+64);
 	sprintf($$, "<field_decl> %s %s %s", $1, $2, mode?"TOKEN_SEMICOLON":$3);
 	free($1);
 	free($2);
@@ -179,36 +179,36 @@ field_decl : datatype var_decl_p TOKEN_SEMICOLON {
 };
 
 var_decl_p : var_decl_c var_decl_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+15);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+32);
 	sprintf($$, "<var_decl_p> %s %s", $1, $2);
 };
 
 var_decl_r : TOKEN_COMMA var_decl_c var_decl_r {
-	$$ = (char*) malloc(strlen($2)+strlen($3)+12);
+	$$ = (char*) malloc(strlen($2)+strlen($3)+32);
 	sprintf($$, "<var_decl_r> %s %s %s", mode?"TOKEN_COMMA":$1, $2, $3);
 	free($1);
 	free($2);
 	free($3);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(13);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<var_decl_r>");
 };
 
 var_decl_c : TOKEN_ID ind {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+23);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+32);
 	sprintf($$, "<var_decl_c> %s %s", mode?"TOKEN_ID":$1, $2);
 	free($1);
 	free($2);
 };
 
 var_decl : TOKEN_ID {
-	$$ = (char*) malloc(strlen($1)+12);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<var_decl> %s", $1);
 	free($1);
 }
 | TOKEN_ID TOKEN_LB TOKEN_DECIMALCONST TOKEN_RB {
-	$$ = (char*) malloc(strlen($1)+57);
+	$$ = (char*) malloc(strlen($1)+64);
 	if (mode) sprintf($$, "<var_decl> %s %s %s %s", "TOKEN_ID", "TOKEN_LB", "TOKEN_DECIMALCONST", "TOKEN_RB");
 	else sprintf($$, "<var_decl> %s %s %d %s", $1, $2, $3, $4);
 	free($1);
@@ -217,19 +217,19 @@ var_decl : TOKEN_ID {
 };
 
 block_r : block block_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+16);
 	sprintf($$, "<block_r> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | block {
-	$$ = (char*) malloc(strlen($1)+10);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<block_r> %s", $1);
 	free($1);
 };
 
 block : TOKEN_LCB line_r TOKEN_RCB {
-	$$ = (char*) malloc(strlen($2)+29);
+	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<block> %s %s %s", mode?"TOKEN_LCB":$1, $2, mode?"TOKEN_RCB":$3);
 	free($1);
 	free($2);
@@ -237,29 +237,29 @@ block : TOKEN_LCB line_r TOKEN_RCB {
 };
 
 line_r : line line_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+11);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+16);
 	sprintf($$, "<line_r> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(9);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<line_r>");
 }
 
 line : statement {
-	$$ = (char*) malloc(strlen($1)+11);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<line> %s", $1);
 	free($1);
 }
 |   field_decl {
-	$$ = (char*) malloc(strlen($1)+11);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<decl> %s", $1);
 	free($1);
 };
 
 statement : lval TOKEN_ASSIGNOP lexpr TOKEN_SEMICOLON {
-	$$ = (char*) malloc(strlen($1)+strlen($3)+45);
+	$$ = (char*) malloc(strlen($1)+strlen($3)+64);
 	sprintf($$, "<statement> %s %s %s %s", $1, mode?"TOKEN_ASSIGNOP":$2, $3, mode?"TOKEN_SEMICOLON":$4);
 	free($1);
 	free($2);
@@ -267,124 +267,124 @@ statement : lval TOKEN_ASSIGNOP lexpr TOKEN_SEMICOLON {
 	free($4);
 }
 | method_call TOKEN_SEMICOLON {
-	$$ = (char*) malloc(strlen($1)+31);
+	$$ = (char*) malloc(strlen($1)+64);
 	sprintf($$, "<statement> %s %s", $1, mode?"TOKEN_SEMICOLON":$2);
 	free($1);
 	free($2);
 }
 | if_block {
-	$$ = (char*) malloc(strlen($1)+13);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<statement> %s", $1);
 	free($1);
 }
 | for_block {
-	$$ = (char*) malloc(strlen($1)+13);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<statement> %s", $1);
 	free($1);
 }
 | TOKEN_RETURN lexpr TOKEN_SEMICOLON {
-	$$ = (char*) malloc(strlen($2)+40);
+	$$ = (char*) malloc(strlen($2)+64);
 	sprintf($$, "<statement> %s %s %s",mode?"TOKEN_RETURN":$1, $2,mode?"TOKEN_SEMICOLON":$3);
 	free($1);
 	free($2);
 	free($3);
 }
 | TOKEN_BREAKSTMT TOKEN_SEMICOLON {
-	$$ = (char*) malloc(43);
+	$$ = (char*) malloc(64);
 	sprintf($$, "<statement> %s %s",mode?"TOKEN_BREAKSTMT":$1, mode?"TOKEN_SEMICOLON":$2);
 	free($1);
 	free($2);
 }
 | TOKEN_CONTINUESTMT TOKEN_SEMICOLON {
-	$$ = (char*) malloc(46);
+	$$ = (char*) malloc(64);
 	sprintf($$, "<statement> %s %s",mode?"TOKEN_CONTINUESTMT":$1, mode?"TOKEN_SEMICOLON":$2);
 	free($1);
 	free($2);
 }
 | block {
-	$$ = (char*) malloc(strlen($1)+13);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<statement> %s", $1);
 	free($1);
 };
 
 methodtype : TOKEN_INTTYPE {
-	$$ = (char*) malloc(25);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);
 	free($1);
 }
 | TOKEN_STRINGTYPE {
-	$$ = (char*) malloc(28);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);
 	free($1);
 }
 | TOKEN_CHARTYPE {
-	$$ = (char*) malloc(26);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_CHARTYPE":$1);
 	free($1);
 };
 | TOKEN_VOIDTYPE {
-	$$ = (char*) malloc(28);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<methodtype> %s",mode?"TOKEN_VOIDTYPE":$1);
 	free($1);
 };
 
 datatype : TOKEN_INTTYPE {
-	$$ = (char*) malloc(25);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_INTTYPE":$1);
 	free($1);
 }
 | TOKEN_STRINGTYPE {
-	$$ = (char*) malloc(28);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_STRINGTYPE":$1);
 	free($1);
 }
 | TOKEN_CHARTYPE {
-	$$ = (char*) malloc(26);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<datatype> %s", mode?"TOKEN_CHARTYPE":$1);
 	free($1);
 };
 
 lval : TOKEN_ID {
-	$$ = (char*) malloc(strlen($1)+16);
+	$$ = (char*) malloc(strlen($1)+32);
 	sprintf($$, "<lval> %s", mode?"TOKEN_ID":$1);
 	free($1);
 }
 | TOKEN_ID ind {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+17);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+32);
 	sprintf($$, "<lval> %s %s", mode?"TOKEN_ID":$1, $2);
 	free($1);
 	free($2);
 };
 
 arg_p : arg arg_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+10);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+16);
 	sprintf($$, "<arg_p> %s %s", $1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(8);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<arg_p>");
 };
 
 arg_r : TOKEN_COMMA arg arg_r {
-	$$ = (char*) malloc(strlen($2)+21);
+	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<arg_r> %s %s", mode?"TOKEN_COMMA":$1, $2);
 	free($1);
 	free($2);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(9);
+	$$ = (char*) malloc(16);
 	sprintf($$, "<arg_r>");
 };
 
 arg : lexpr {
-	$$ = (char*) malloc(strlen($1)+7);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<arg> %s", $1);
 	free($1);
 }
 | TOKEN_STRINGCONST {
-	$$ = (char*) malloc(strlen($1)+24);
+	$$ = (char*) malloc(strlen($1)+32);
 	sprintf($$, "<arg> %s",mode?"TOKEN_STRINGCONST":$1);
 	free($1);
 };
@@ -397,39 +397,39 @@ lexpr : expr TOKEN_RELATIONOP lexpr {
 	free($3);
 }
 | expr {
-	$$ = (char*) malloc(strlen($1));
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<lexpr> %s", $1);
 	free($1);
 };
 
 expr : prod TOKEN_ARITHMATICOP_1 expr {
-	$$ = (char*) malloc(strlen($1)+strlen($3)+30);
+	$$ = (char*) malloc(strlen($1)+strlen($3)+32);
 	sprintf($$, "<expr> %s %s %s", $1,mode?"TOKEN_ARITHMATICOP_1":$2, $3);
 	free($1);
 	free($2);
 	free($3);
 }
 | prod {
-	$$ = (char*) malloc(strlen($1)+8);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<expr> %s", $1);
 	free($1);
 };
 
 prod : atm TOKEN_ARITHMATICOP_2 prod {
-	$$ = (char*) malloc(strlen($1)+strlen($3)+30);
+	$$ = (char*) malloc(strlen($1)+strlen($3)+32);
 	sprintf($$, "<prod> %s %s %s", $1, mode?"TOKEN_ARITHMATICOP_2":$2, $3);
 	free($1);
 	free($2);
 	free($3);
 }
 | TOKEN_LOGICOP prod {
-	$$ = (char*) malloc(strlen($2)+22);
+	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<prod> %s %s",mode?"TOKEN_LOGICOP":$1, $2);
 	free($1);
 	free($2);
 }
 | atm {
-	$$ = (char*) malloc(strlen($1)+8);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<prod> %s", $1);
 	free($1);
 };
@@ -441,7 +441,7 @@ atm : TOKEN_ID ind {
 	free($2);
 }
 | char_literal {
-	$$ = (char*) malloc(strlen($1)+7);
+	$$ = (char*) malloc(strlen($1)+8);
 	sprintf($$, "<atm> %s", $1);
 	free($1);
 }
@@ -456,7 +456,7 @@ atm : TOKEN_ID ind {
 	else sprintf($$, "<atm> %x", $1);
 }
 | TOKEN_LP lexpr TOKEN_RP {
-	$$ = (char*) malloc(strlen($2)+23);
+	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<atm> %s %s %s", mode?"TOKEN_LP":$1, $2, mode?"TOKEN_RP":$3);
 	free($1);
 	free($2);
@@ -464,19 +464,19 @@ atm : TOKEN_ID ind {
 };
 
 ind : TOKEN_LB lexpr TOKEN_RB {
-	$$ = (char*) malloc(strlen($2)+25);
+	$$ = (char*) malloc(strlen($2)+32);
 	sprintf($$, "<ind> %s %s %s", mode?"TOKEN_LB":$1, $2, mode?"TOKEN_RB":$3);
 	free($1);
 	free($2);
 	free($3);
 }
 | /*empty*/ {
-	$$ = (char*) malloc(6);
+	$$ = (char*) malloc(8);
 	sprintf($$, "<ind>");
 };
 
 method_call : method_name TOKEN_LP arg_p TOKEN_RP {
-	$$ = (char*) malloc(strlen($1)+strlen($3)+34);
+	$$ = (char*) malloc(strlen($1)+strlen($3)+64);
 	sprintf($$, "<method_call> %s %s %s %s", $1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4);
 	free($1);
 	free($2);
@@ -484,7 +484,7 @@ method_call : method_name TOKEN_LP arg_p TOKEN_RP {
 	free($4);
 }
 | TOKEN_CALLOUT TOKEN_LP callout_arg_p TOKEN_RP {
-	$$ = (char*) malloc(strlen($3)+47);
+	$$ = (char*) malloc(strlen($3)+64);
 	sprintf($$, "<method_call> %s %s %s %s", mode?"TOKEN_CALLOUT":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4);
 	free($1);
 	free($2);
@@ -493,42 +493,42 @@ method_call : method_name TOKEN_LP arg_p TOKEN_RP {
 };
 
 callout_arg_p : TOKEN_STRINGCONST arg_r {
-	$$ = (char*) malloc(strlen($1)+strlen($2)+35);
+	$$ = (char*) malloc(strlen($1)+strlen($2)+64);
 	sprintf($$, "<callout_arg_p> %s %s", mode?"TOKEN_STRINGCONST":$1, $2);
 	free($1);
 	free($2);
 };
 
 method_name : id {
-	$$ = (char*) malloc(strlen($1)+15);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<method_name> %s", $1);
 	free($1);
 };
 
 id : TOKEN_ID {
-	$$ = (char*) malloc(strlen($1)+14);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<id> %s", mode?"TOKEN_ID":$1);
 	free($1);
 }
 | TOKEN_MAINFUNC {
-	$$ = (char*) malloc(20);
+	$$ = (char*) malloc(32);
 	sprintf($$, "<id> %s", mode?"TOKEN_MAINFUNC":$1);
 	free($1);
 };
 
 int_literal : TOKEN_DECIMALCONST {
-	$$ = (char*) malloc(33);
+	$$ = (char*) malloc(64);
 	if (mode) sprintf($$, "<int_literal> TOKEN_DECIMALCONST");
 	else sprintf($$, "<int_literal> %d", $1);
 }
 | TOKEN_HEX {
-	$$ = (char*) malloc(25);
+	$$ = (char*) malloc(32);
 	if (mode) sprintf($$, "<int_literal> TOKEN_HEX");
 	else sprintf($$, "<int_literal> %x", $1);
 };
 
 if_block : TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block {
-	$$ = (char*) malloc(strlen($3)+strlen($5)+49);
+	$$ = (char*) malloc(strlen($3)+strlen($5)+64);
 	sprintf($$, "<if_block> %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5);
 	free($1);
 	free($2);
@@ -537,7 +537,7 @@ if_block : TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block {
 	free($5);
 }
 | TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block TOKEN_ELSECONDITION if_block_r {
-	$$ = (char*) malloc(strlen($3)+strlen($5)+strlen($7)+70);
+	$$ = (char*) malloc(strlen($3)+strlen($5)+strlen($7)+128);
 	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_IFCONDITION":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_RP":$4, $5, mode?"TOKEN_ELSECONDITION":$6, $7);
 	free($1);
 	free($2);
@@ -549,18 +549,18 @@ if_block : TOKEN_IFCONDITION TOKEN_LP lexpr TOKEN_RP block {
 };
 
 if_block_r : if_block {
-	$$ = (char*) malloc(strlen($1)+14);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<if_block_r> %s", $1);
 	free($1);
 }
 | block {
-	$$ = (char*) malloc(strlen($1)+14);
+	$$ = (char*) malloc(strlen($1)+16);
 	sprintf($$, "<if_block_r> %s", $1);
 	free($1);
 };
 
 for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA lexpr TOKEN_RP block {
-	$$ = (char*) malloc(strlen($3)+strlen($5)+strlen($7)+53);
+	$$ = (char*) malloc(strlen($3)+strlen($5)+strlen($7)+64);
 	sprintf($$, "<if_block> %s %s %s %s %s %s %s", mode?"TOKEN_LOOP":$1, mode?"TOKEN_LP":$2, $3, mode?"TOKEN_COMMA":$4, $5, mode?"TOKEN_RP":$6, $7);
 	free($1);
 	free($2);
@@ -572,7 +572,7 @@ for_block : TOKEN_LOOP TOKEN_LP statement TOKEN_COMMA lexpr TOKEN_RP block {
 };
 
 char_literal : TOKEN_CHARCONST {
-	$$ = (char*) malloc(32);
+	$$ = (char*) malloc(64);
 	if (mode) sprintf($$, "<char_literal> TOKEN_CHARCONST");
 	else sprintf($$, "<char_literal> %s", $1);
 	free($1);

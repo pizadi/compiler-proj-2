@@ -5,6 +5,7 @@ return a + b;
 void main(){
 int a, b;
 a = 3;
-add(3);
+add();
+if (3<5) {}
 }
 }
